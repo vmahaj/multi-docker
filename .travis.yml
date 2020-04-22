@@ -1,0 +1,23 @@
+sudo: required
+services:
+        - docker
+
+before_install:
+        - docker build -t vmahaj/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+        - docker run vmahaj/react-test npm test -- --coverage
+
+after_success:
+        - docker build -t vmahaj/multi-client ./client
+        - docker build -t vmahaj/multi-nginx ./nginx
+        - docker build -t vmahaj/multi-server ./server
+        - docker build -t vmahaj/multi-worker ./worker
+        # Log in to the docker CLI
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+        # Take those images and push them to docker hub
+        - docker push vmahaj/multi-client
+        - docker push vmahaj/multi-nginx
+        - docker push vmahaj/multi-server
+        - docker push vmahaj/multi-worker
+
