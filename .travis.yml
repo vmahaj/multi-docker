@@ -3,21 +3,21 @@ services:
         - docker
 
 before_install:
-        - docker build -t vmahaj/react-test -f ./client/Dockerfile.dev ./client
+        - docker build -t dockervmahaj/react-test -f ./client/Dockerfile.dev ./client
 
 script:
-        - docker run vmahaj/react-test npm test -- --coverage
+        - docker run dockervmahaj/react-test npm test -- --coverage
 
 after_success:
-        - docker build -t vmahaj/multi-client ./client
-        - docker build -t vmahaj/multi-nginx ./nginx
-        - docker build -t vmahaj/multi-server ./server
-        - docker build -t vmahaj/multi-worker ./worker
+        - docker build -t dockervmahaj/multi-client ./client
+        - docker build -t dockervmahaj/multi-nginx ./nginx
+        - docker build -t dockervmahaj/multi-server ./server
+        - docker build -t dockervmahaj/multi-worker ./worker
         # Log in to the docker CLI
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
         # Take those images and push them to docker hub
-        - docker push vmahaj/multi-client
-        - docker push vmahaj/multi-nginx
-        - docker push vmahaj/multi-server
-        - docker push vmahaj/multi-worker
+        - docker push dockervmahaj/multi-client
+        - docker push dockervmahaj/multi-nginx
+        - docker push dockervmahaj/multi-server
+        - docker push dockervmahaj/multi-worker
 
